@@ -1,6 +1,3 @@
-/*
-Command format: watcher [callback].
-*/
 package main
 
 import (
@@ -13,7 +10,6 @@ import (
 
 var args = strings.Split(os.Args[1], " ")
 
-// Listen and serve the file system file change events, and execute the callback command through child process when the file change events occur.
 func main() {
 	var watcher, _ = fsnotify.NewWatcher()
 	defer watcher.Close()
