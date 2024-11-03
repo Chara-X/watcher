@@ -1,7 +1,9 @@
-# Watch callback
+# watcher
+
+## Command
 
 ```sh
-watcher [command]
+watcher "command"
 ```
 
 ## Reference

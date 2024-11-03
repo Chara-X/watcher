@@ -3,29 +3,22 @@ package main
 import (
 	"os"
 	"os/exec"
-	"strings"
 
 	"github.com/fsnotify/fsnotify"
 )
 
-var args = strings.Split(os.Args[1], " ")
-
 func main() {
-	var watcher, _ = fsnotify.NewWatcher()
-	defer watcher.Close()
-	watcher.Add("./")
-	var process *os.Process
-	var path, _ = exec.LookPath(args[0])
-	for event := range watcher.Events {
-		if event.Op == fsnotify.Chmod {
+	var w, _ = fsnotify.NewWatcher()
+	defer w.Close()
+	w.Add("./")
+	for e := range w.Events {
+		if e.Op == fsnotify.Chmod {
 			continue
 		}
-		go func() {
-			if process != nil {
-				process.Kill()
-			}
-			process, _ = os.StartProcess(path, args, &os.ProcAttr{Files: []*os.File{os.Stdin, os.Stdout, os.Stderr}})
-			process.Wait()
-		}()
+		var cmd = exec.Command("sh", "-c", os.Args[1])
+		cmd.Stdin = os.Stdin
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		cmd.Run()
 	}
 }
